@@ -135,7 +135,9 @@ namespace Sortit.UnitTest
                     .AsQueryable();
 
                 // e.g "Surname, Address, PostCode desc" ->
-                var sorterMetas = ToSorterMetas(sorterMetaString);
+                var sorterMetas =
+                    ToSorterMetas(sorterMetaString)
+                    .ToList();
 
                 // Act
 

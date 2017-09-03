@@ -5,12 +5,13 @@ namespace Sortit
 {
     public static class SortitExtensions
     {
-        public static IOrderedQueryable<T> Sortit<T>(this IQueryable<T> queryable, IEnumerable<SorterMeta> isortersMetas)
+        public static IOrderedQueryable<T> Sortit<T>(this IQueryable<T> queryable, List<SorterMeta> sorterMetas)
         {
             // swap to a List
-            var sorterMetas =
-                isortersMetas
-                .ToList();
+            //var sorterMetas =
+            //    isortersMetas
+            //    //.ToList()
+            //    ;
 
             // Send the queryable parameter to the SortitFirst,
             // SortitFirst() takes an IQueryable argument
@@ -62,16 +63,15 @@ namespace Sortit
             }
         }
 
-        public static IEnumerable<SorterMeta> ToSorterMetas(string sorterMetaString)
+        public static List<SorterMeta> ToSorterMetas(string sorterMetaString)
         {
             // maps
-            //        "Surnaame, Forename desc"
+            //        "Surname, Forename desc"
             //     -> ["Surname , "Forename desc"]
             var sorterMetaItemStrings =
                     sorterMetaString
                     .Trim()
-                    .Split(',')
-                    ;
+                    .Split(',');
 
             // maps
             //       ["Surname , "Forename desc"]
@@ -116,12 +116,10 @@ namespace Sortit
                         }
                     });
 
-            var sorterMetasRet =
-                sorterMetas
-                .ToList();
+            //var sorterMetasRet =sorterMetas.ToList();
 
             // Return
-            return sorterMetasRet;
+            return sorterMetas.ToList();
         }
     }
 }

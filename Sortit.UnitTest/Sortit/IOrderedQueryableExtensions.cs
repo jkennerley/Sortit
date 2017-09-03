@@ -148,7 +148,7 @@ namespace Sortit
                 .Invoke(null, new object[] { queryable, expressionForPathProperty });
 
             // Note genericMethod.Invoke(...) is typed is returning a object.
-            // But we know Queryable.OrderBy(), and other funs like like this, always return IOrderedQueryable
+            // But we know Queryable.OrderBy(), and other funs like this, always return IOrderedQueryable
             // So we should be able to cast that return to IOrderedQueryable<T>
             // rfc : ?could probably do something like var ret = result as IOrderedQueryable<T>, and assert before the fun goers back
 
