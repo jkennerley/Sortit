@@ -8,7 +8,7 @@
     <ProjectGuid>{7A396680-0F5E-446A-9829-08C591736466}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExprTree</RootNamespace>
+    <RootNamespace>Sortit.UnitTest</RootNamespace>
     <AssemblyName>ExprTree</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -61,12 +61,12 @@
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="UnitTestSpike\ExprTreeUnitTest.cs" />
-    <Compile Include="UnitTest\SortitTestables.cs" />
+    <Compile Include="SortitUnitTest\SortitTestables.cs" />
     <Compile Include="Sortit\IOrderedQueryableExtensions.cs" />
     <Compile Include="Sortit\SortitMeta.cs" />
     <Compile Include="Sortit\SortitExtensions.cs" />
-    <Compile Include="UnitTest\SortitUnitTest.cs" />
-    <Compile Include="UnitTest\SortitOldUnitTest.cs" />
+    <Compile Include="SortitUnitTest\SortitUnitTest.cs" />
+    <Compile Include="SortitUnitTest\SortitOldUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

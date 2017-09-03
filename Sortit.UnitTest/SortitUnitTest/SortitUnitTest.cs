@@ -26,7 +26,7 @@ namespace Sortit.UnitTest
                 this.output = output;
             }
 
-            [Theory]
+            //[Theory]
             [InlineData("Surname")]
             [InlineData("Surname asc")]
             [InlineData("Surname desc")]
@@ -38,7 +38,7 @@ namespace Sortit.UnitTest
             [InlineData("Surname desc, Forename desc")]
             [InlineData("Surname desc, Forename desc, Age desc")]
             [InlineData("Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            public void ToSorterMetas_should_return_expected(string sorterMetaString)
+            public void Z0010_ToSorterMetas_should_return_expected(string sorterMetaString)
             {
                 // Arrange
 
@@ -71,7 +71,7 @@ namespace Sortit.UnitTest
 
             [Theory]
             [InlineData(true, 9, 4)]
-            public void orderBy_propertyName_eq_Surname_should_not_except(
+            public void Z0110_orderBy_propertyName_eq_Surname_should_not_except(
                 bool debugPrint,
                 int n,
                 int numberPerGroup)
@@ -84,11 +84,17 @@ namespace Sortit.UnitTest
                 // Act
 
                 // sut call
-                var personsSorted =
+                var personsSortedQueryable =
                     persons
                     .OrderBy("Surname");
 
+                var personsSorted =
+                    personsSortedQueryable
+                    .ToList();
+
                 // Assert
+
+                // todo : put in some proper test!
 
                 // Dbg Print
                 this.output.WriteLine($"{DateTime.Now} ; N: {personsSorted.Count()} ; numberPerGroup: {numberPerGroup} ; ");
@@ -100,18 +106,21 @@ namespace Sortit.UnitTest
                 }
             }
 
-            [Theory]
-            [InlineData(true, 15, 3, "Surname, Forename , Age , Address.PostCode ")]
-            [InlineData(true, 15, 3, "Surname desc , Forename desc , Age , Address.PostCode ")]
-            [InlineData(false, 10, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 20, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 50, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 100, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 1_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 10_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 50_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            [InlineData(false, 100_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
-            public void sortit_by_by_sorter_meta_string_should_be_timely(
+            //[Theory]
+            //[InlineData(true, 15, 3, "Surname, Forename , Age , Address.PostCode ")]
+            //[InlineData(true, 15, 3, "Surname desc , Forename desc , Age , Address.PostCode ")]
+            //[InlineData(false, 10, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 20, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 50, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            ////[InlineData(false, 100, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 1_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 10_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 50_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(false, 100_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
+            //[InlineData(true, 20, 3, "Address.PostCode desc, Surname desc, Forename desc ")]
+            //[InlineData(true, 20, 3, "Salary desc")]
+            [InlineData(true, 30, 4, "Age des")]
+            public void A0210_sortit_by_a_sorterMetaString_should_be_timely_and_not_except_and_should_yield_correct_result(
                 bool debugPrint,
                 int n,
                 int numberPerGroup,
@@ -138,15 +147,14 @@ namespace Sortit.UnitTest
 
                 // Assert
 
-                // todo ; tests!
-                // ...
+                // todo : put in some proper test!
 
                 // Dbg Print
                 this.output.WriteLine($"{DateTime.Now} ; N: {personsSorted.Count()} ; numberPerGroup: {numberPerGroup} ; ");
                 if (debugPrint)
                 {
-                    persons.ToList().ForEach(x =>
-                        this.output.WriteLine($"{x.Surname} ; {x.Forename} ; Age: {x.Age:D2} ; { (x.Alive ? "True " : "false") } ; p: {x.Prob:f2} ; {x.Salary:C} ; {x.DOB:yyyy/MM/dd hh:mm:ss} ; {x.Address.PostCode} ")
+                    personsSorted.ToList().ForEach(x =>
+                        this.output.WriteLine($"{x.Surname} ; {x.Forename} ; Age: {x.Age:D2} ; { (x.Alive ? "TRUE " : "false") } ; p: {x.Prob:f2} ; {x.Salary:C} ; {x.DOB:yyyy/MM/dd hh:mm:ss} ; {x.Address.PostCode} ")
                     );
                 }
             }

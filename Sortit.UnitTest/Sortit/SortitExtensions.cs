@@ -5,14 +5,15 @@ namespace Sortit
 {
     public static class SortitExtensions
     {
-        public static IOrderedQueryable<T> Sortit<T>(this IQueryable<T> queryable, IEnumerable<SorterMeta> sortersMetas_)
+        public static IOrderedQueryable<T> Sortit<T>(this IQueryable<T> queryable, IEnumerable<SorterMeta> isortersMetas)
         {
             // swap to a List
-            var sorterMetas = sortersMetas_.ToList();
+            var sorterMetas =
+                isortersMetas
+                .ToList();
 
-            // Send the queryable parameter,
-            //  to the  SortitFirst,
-            // SortitFirst(), takes a IQueryable argument
+            // Send the queryable parameter to the SortitFirst,
+            // SortitFirst() takes an IQueryable argument
             // SortitFirst() returns an IOrderedQueryable
             // this is assigned to the return value of this function
             var orderedQueryableRet =
@@ -21,7 +22,7 @@ namespace Sortit
                     sorterMetas[0]
                 );
 
-            // Exept for the first sorterMetas, i.e. sorterMetas[0]
+            // Except for the first sorterMetas, i.e. sorterMetas[0]
             // send each sorterMeta of the sorterMetas parameter
             // Send the return value of this function to Sortit(), passing in each sorterMeta
             // and then assign the return value to the return value of this function i.e. orderedQueryableRet
@@ -110,7 +111,7 @@ namespace Sortit
                                 return new SorterMeta { PropertyName = propertyName, Desc = desc };
 
                             default:
-                                // refactor : should probably cause exc here !
+                                // Refactor : should probably cause exception here !
                                 return null;
                         }
                     });
