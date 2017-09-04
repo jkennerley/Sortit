@@ -69,7 +69,7 @@ namespace Sortit.UnitTest
                 this.output = output;
             }
 
-            [Theory]
+            //[Theory]
             [InlineData(true, 9, 4)]
             public void Z0110_orderBy_propertyName_eq_Surname_should_not_except(
                 bool debugPrint,
@@ -106,7 +106,12 @@ namespace Sortit.UnitTest
                 }
             }
 
-            //[Theory]
+            [Theory]
+            //[InlineData(false, 15, 3, "Surname")]      //      1ms
+            [InlineData(false, 100, 3, "Surname")]     //      2ms
+            [InlineData(false, 1000, 3, "Surname")]    //      7ms 
+            [InlineData(false, 10_000, 3, "Surname")]  //    226ms
+            [InlineData(false, 100_000, 3, "Surname")] //    852ms
             //[InlineData(true, 15, 3, "Surname, Forename , Age , Address.PostCode ")]
             //[InlineData(true, 15, 3, "Surname desc , Forename desc , Age , Address.PostCode ")]
             //[InlineData(false, 10, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
@@ -119,8 +124,8 @@ namespace Sortit.UnitTest
             //[InlineData(false, 100_000, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
             //[InlineData(true, 20, 3, "Address.PostCode desc, Surname desc, Forename desc ")]
             //[InlineData(true, 20, 3, "Salary desc")]
-            [InlineData(true, 30, 4, "Age des")]
-            public void A0210_sortit_by_a_sorterMetaString_should_be_timely_and_not_except_and_should_yield_correct_result(
+            //[InlineData(true, 30, 4, "Age desc")]
+            public void Sortit_by_sorterMetaString_should_be_timely(
                 bool debugPrint,
                 int n,
                 int numberPerGroup,

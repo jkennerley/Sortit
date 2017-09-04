@@ -60,9 +60,9 @@ namespace Sortit
         /// <summary>
         /// e.g. ApplyOrder( queryable, "t.Address.PostCode" , "OrderBy")
         /// It does this by
-        ///   1. searching for the "OrderBy" method, which is an extension method on IQueryable<T>
-        ///   2. it passes in queryable as the 1st param
-        ///   3. it then magics creates an Expression from knowing about "t.Address.PostCode"
+        ///   1. searching for the methodName e.g. "OrderBy" method, which is an extension method on IQueryable<T>
+        ///   2.  1st param is the queryable passed in as param to this fun
+        ///   3.  the 2nd param, is a expression, it this expression the propertyPath param e.g. "t.Address.PostCode"
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="queryable"></param>
