@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Sortit
+namespace SortIt
 {
     public static class SortitExtensions
+
     {
         public static IOrderedQueryable<T> Sortit<T>(this IQueryable<T> queryable, List<SorterMeta> sorterMetas)
         {
@@ -12,16 +13,15 @@ namespace Sortit
             //    isortersMetas
             //    //.ToList()
             //    ;
-
             // Send the queryable parameter to the SortitFirst,
             // SortitFirst() takes an IQueryable argument
             // SortitFirst() returns an IOrderedQueryable
             // this is assigned to the return value of this function
             var orderedQueryableRet =
                 queryable
-                .SortitFirst(
-                    sorterMetas[0]
-                );
+                    .SortitFirst(
+                        sorterMetas[0]
+                    );
 
             // Except for the first sorterMetas, i.e. sorterMetas[0]
             // send each sorterMeta of the sorterMetas parameter
@@ -43,11 +43,11 @@ namespace Sortit
         {
             if (sorterMeta.Desc)
             {
-                return queryable.OrderByDescending(sorterMeta.PropertyName);
+                return queryable.SortItOrderByDescending(sorterMeta.PropertyName);
             }
             else
             {
-                return queryable.OrderBy(sorterMeta.PropertyName);
+                return queryable.SortItOrderBy(sorterMeta.PropertyName);
             }
         }
 
@@ -55,11 +55,11 @@ namespace Sortit
         {
             if (sorterMeta.Desc)
             {
-                return queryable.ThenByDescending(sorterMeta.PropertyName);
+                return queryable.SortItThenByDescending(sorterMeta.PropertyName);
             }
             else
             {
-                return queryable.ThenBy(sorterMeta.PropertyName);
+                return queryable.SortItThenBy(sorterMeta.PropertyName);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Sortit
             //        "Surname, Forename desc"
             //     -> ["Surname , "Forename desc"]
             var sorterMetaItemStrings =
-                    sorterMetaString
+                sorterMetaString
                     .Trim()
                     .Split(',');
 
@@ -81,13 +81,13 @@ namespace Sortit
                     .Select(x =>
                         x.Trim().Split(' ')
                     );
-
             // maps
             //           [ ["Surname ], ["Forename", "desc"]]
             // List<> -> {
             //              { "Surname" , Desc = false }
             //             ,{ "Forname" , Desc = true }
             //          }
+
             var sorterMetas =
                 sorterMetaItems
                     .Select(sorterMetaItem =>
@@ -117,9 +117,8 @@ namespace Sortit
                     });
 
             //var sorterMetasRet =sorterMetas.ToList();
-
             // Return
-            return sorterMetas.ToList();
+            return sorterMetas.Distinct(new SorterMetaComparer()).ToList();
         }
     }
 }

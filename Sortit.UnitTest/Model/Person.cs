@@ -15,5 +15,8 @@ namespace ExprTree.Model
         public DateTime DOB { get; set; }
 
         public Address Address { get; set; }
+
+        public Town Town { get; set; }
+
     }
 }

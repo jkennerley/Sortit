@@ -1,27 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Sortit
+namespace SortIt
 {
     public static class IOrderedQueryableExtensions
+
     {
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string property)
+        public static IOrderedQueryable<T> SortItOrderBy<T>(this IQueryable<T> source, string property)
         {
             return ApplyOrder<T>(source, property, "OrderBy");
         }
 
-        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
+        public static IOrderedQueryable<T> SortItOrderByDescending<T>(this IQueryable<T> source, string property)
         {
             return ApplyOrder<T>(source, property, "OrderByDescending");
         }
 
-        public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
+        public static IOrderedQueryable<T> SortItThenBy<T>(this IOrderedQueryable<T> source, string property)
         {
             return ApplyOrder<T>(source, property, "ThenBy");
         }
 
-        public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
+        public static IOrderedQueryable<T> SortItThenByDescending<T>(this IOrderedQueryable<T> source, string property)
         {
             return ApplyOrder<T>(source, property, "ThenByDescending");
         }
@@ -76,7 +78,6 @@ namespace Sortit
         )
         {
             // Code
-
             // get an array of string that 'paths' to the property
             // e.g. property = "Surname"  -> ["Surname"]
             // e.g. property = "Address.PostCode" -> ["Address","PostCode"]
@@ -94,7 +95,12 @@ namespace Sortit
 
             // for each property in the property path e.g. Person.Surname get its (expression, type)
             Expression pathPropertyExpression = parameterExpressionOfT; // initialise propertyExpression with "t"
-            var propertyType = typeOfT; // initialise propertyType with typeOfT, but this will become the type of the property e.g. typeof Surname
+            Stack<Expression> pathPropertExpressions = new Stack<Expression>();
+            pathPropertExpressions
+                .Push(parameterExpressionOfT); // list of each property path as they get built up so that we can build a nested if/else block later.
+            var propertyType =
+                typeOfT; // initialise propertyType with typeOfT, but this will become the type of the property e.g. typeof Surname
+
             foreach (var property in properties)
             {
                 // For the property get it's (expression , type )
@@ -105,10 +111,25 @@ namespace Sortit
                     // for each property down the path, get its (expression, type)
                     // the first time through : propertyExpression on the rhs might be "t", and after the assignment, will be "t.Surname"
                     // 2nd time through : propertyExpression on the rhs will be "t.Address", and after the assignment, will be "t.Address.PostCode"
+
                     pathPropertyExpression = Expression.Property(pathPropertyExpression, propertyInfo);
+                    pathPropertExpressions.Push(pathPropertyExpression);
+
                     // this will be used to create expression for the OrderBy( expression )
                     propertyType = propertyInfo.PropertyType;
                 }
+            }
+
+            Expression ifExpression = pathPropertyExpression; // assume no depth to start with
+            //foreach (Expression exp in pathPropertExpressions)
+            Expression exp;
+            while (pathPropertExpressions.Count > 0)
+            {
+                exp = pathPropertExpressions.Pop();
+                ifExpression =
+                    Expression.Condition(
+                        Expression.Equal(exp, Expression.Default(exp.Type) /*Expression.Constant(null)*/),
+                        Expression.Default(pathPropertyExpression.Type), ifExpression);
             }
 
             // get a delegate, that delegate belongs to typeOfT and string because t.Surname is type string
@@ -117,13 +138,16 @@ namespace Sortit
             Type delegateType = typeof(Func<,>).MakeGenericType(typeOfT, propertyType);
 
             // wrap that delegate in an expression,
-            LambdaExpression expressionForPathProperty = Expression.Lambda(delegateType, pathPropertyExpression, parameterExpressionOfT);
+            //LambdaExpression expressionForPathProperty = Expression.Lambda(delegateType, pathPropertyExpression, parameterExpressionOfT);
+            LambdaExpression expressionForPathProperty =
+                Expression.Lambda(delegateType, ifExpression, parameterExpressionOfT);
 
             // get a the single method info that matches the criteria
             //  There is e method on System.Linq.Queryable
             //   it has a name,
             //   as was sent into this function e.g. "OrderBy"
             //  that method is Generic & has 2 generic arguments & 2 params
+
             var methodInfo =
                 typeof(Queryable)
                     .GetMethods()
@@ -135,17 +159,15 @@ namespace Sortit
                     );
 
             // make a genericMethod, using the methodInfo
-            var genericMethod =
-                methodInfo
-                .MakeGenericMethod(typeof(T), propertyType);
+            var genericMethod = methodInfo.MakeGenericMethod(typeof(T), propertyType);
 
             // call the method, that method is a extension method of the queryable
             //   the 'this' parameter is the queryable
             //   the 2nd param is an expression for the path property
             //   e.g OrderBy and it's homo-iconicity(!) is something like "t.Surname" or "t.Address.PostCode"
-            var result =
-                genericMethod
-                .Invoke(null, new object[] { queryable, expressionForPathProperty });
+            var result = genericMethod.Invoke(null, new object[] { queryable, expressionForPathProperty });
+
+            //result = genericMethod.Invoke(null, new object[] { queryable, expressionForPathProperty });
 
             // Note genericMethod.Invoke(...) is typed is returning a object.
             // But we know Queryable.OrderBy(), and other funs like this, always return IOrderedQueryable

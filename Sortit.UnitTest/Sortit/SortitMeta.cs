@@ -1,4 +1,4 @@
-﻿namespace Sortit
+﻿namespace SortIt
 {
     public class SorterMeta
     {

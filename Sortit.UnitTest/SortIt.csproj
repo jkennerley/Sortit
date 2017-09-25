@@ -58,15 +58,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Town.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Person.cs" />
+    <Compile Include="Sortit\SorterMetaCompparer.cs" />
     <Compile Include="UnitTestSpike\ExprTreeUnitTest.cs" />
-    <Compile Include="SortitUnitTest\SortitTestables.cs" />
+    <Compile Include="SortitUnitTest\SortitFakeTestables.cs" />
     <Compile Include="Sortit\IOrderedQueryableExtensions.cs" />
     <Compile Include="Sortit\SortitMeta.cs" />
     <Compile Include="Sortit\SortitExtensions.cs" />
     <Compile Include="SortitUnitTest\SortitUnitTest.cs" />
-    <Compile Include="SortitUnitTest\SortitOldUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using SortIt;
 using Xunit;
 using Xunit.Abstractions;
 
-using static Sortit.SortitExtensions;
+//using static Sortit.SortitExtensions;
+//using static Sortit.;
+
 using static Sortit.UnitTest.SortitTestables;
 
 namespace Sortit.UnitTest
@@ -45,7 +48,7 @@ namespace Sortit.UnitTest
                 // Act
 
                 // sut call
-                var sorterMetas = ToSorterMetas(sorterMetaString);
+                var sorterMetas = SortitExtensions.ToSorterMetas(sorterMetaString);
 
                 // Assert
 
@@ -86,7 +89,7 @@ namespace Sortit.UnitTest
                 // sut call
                 var personsSortedQueryable =
                     persons
-                    .OrderBy("Surname");
+                    .SortItOrderBy("Surname");
 
                 var personsSorted =
                     personsSortedQueryable
@@ -107,11 +110,39 @@ namespace Sortit.UnitTest
             }
 
             [Theory]
+            //[InlineData(true, 7, 7, "Surname")]      //      1ms
+
+            //[InlineData(true, 7, 7, "Town.Name")]
+            //[InlineData(true, 7, 7, "Town.Name desc")]
+
+            //[InlineData(true, 7, 7, "Town.County.Name")]
+            //[InlineData(true, 7, 7, "Town.County.Name desc")]
+
+            //[InlineData(true, 7, 7, "Town.County.Name desc, Surname ")]
+            //[InlineData(true, 7, 7, "Town.County.Name desc, Surname desc")]
+
+
+            //[InlineData(true, 7, 7, "Town.County.Country.Name")]
+            [InlineData(true, 7, 7, "Town.County.Country.Name desc")]
+
+            //[InlineData(true, 7, 7, "Town.County.Name")]
+            //[InlineData(true, 7, 7, "Town.County.Name desc")]
+
+            //[InlineData(true, 7, 7, "Town.County.Name")]
+            //[InlineData(true, 7, 7, "Town.County.Name desc")]
+
+            //[InlineData(true, 7, 7, "Town.County.Country.Name desc")]
+
+            //[InlineData(false, 100, 3, "Surname")]     //      2ms
+            //[InlineData(false, 1000, 3, "Surname")]    //      7ms 
+            //[InlineData(false, 10_000, 3, "Surname")]  //    226ms
+            //[InlineData(false, 100_000, 3, "Surname")] //    852ms
+
             //[InlineData(false, 15, 3, "Surname")]      //      1ms
-            [InlineData(false, 100, 3, "Surname")]     //      2ms
-            [InlineData(false, 1000, 3, "Surname")]    //      7ms 
-            [InlineData(false, 10_000, 3, "Surname")]  //    226ms
-            [InlineData(false, 100_000, 3, "Surname")] //    852ms
+            //[InlineData(false, 100, 3, "Surname")]     //      2ms
+            //[InlineData(false, 1000, 3, "Surname")]    //      7ms 
+            //[InlineData(false, 10_000, 3, "Surname")]  //    226ms
+            //[InlineData(false, 100_000, 3, "Surname")] //    852ms
             //[InlineData(true, 15, 3, "Surname, Forename , Age , Address.PostCode ")]
             //[InlineData(true, 15, 3, "Surname desc , Forename desc , Age , Address.PostCode ")]
             //[InlineData(false, 10, 3, "Surname desc, Forename desc, Age desc, Address.PostCode desc")]
@@ -125,6 +156,7 @@ namespace Sortit.UnitTest
             //[InlineData(true, 20, 3, "Address.PostCode desc, Surname desc, Forename desc ")]
             //[InlineData(true, 20, 3, "Salary desc")]
             //[InlineData(true, 30, 4, "Age desc")]
+
             public void Sortit_by_sorterMetaString_should_be_timely(
                 bool debugPrint,
                 int n,
@@ -141,7 +173,7 @@ namespace Sortit.UnitTest
 
                 // e.g "Surname, Address, PostCode desc" ->
                 var sorterMetas =
-                    ToSorterMetas(sorterMetaString)
+                    SortitExtensions.ToSorterMetas(sorterMetaString)
                     .ToList();
 
                 // Act
@@ -161,7 +193,8 @@ namespace Sortit.UnitTest
                 if (debugPrint)
                 {
                     personsSorted.ToList().ForEach(x =>
-                        this.output.WriteLine($"{x.Surname} ; {x.Forename} ; Age: {x.Age:D2} ; { (x.Alive ? "TRUE " : "false") } ; p: {x.Prob:f2} ; {x.Salary:C} ; {x.DOB:yyyy/MM/dd hh:mm:ss} ; {x.Address.PostCode} ")
+                        //this.output.WriteLine($"{x.Surname} ; {x.Forename} ; Age: {x.Age:D2} ; { (x.Alive ? "TRUE " : "false") } ; p: {x.Prob:f2} ; {x.Salary:C} ; {x.DOB:yyyy/MM/dd hh:mm:ss} ; {x.Address.PostCode} ; {x?.Town?.Name} ; {x?.Town?.County.Name} ; {x?.Town?.County.Country.Name} ")
+                        this.output.WriteLine($"{x.Surname} ; {x.Forename} ; Age: {x.Age:D2} ; { (x.Alive ? "TRUE " : "false") } ; p: {x.Prob:f2} ; {x.Salary:C} ; {x.DOB:yyyy/MM/dd hh:mm:ss} ; {x.Address.PostCode} ; {x?.Town?.Name} ; {x?.Town?.County?.Name} ; {x?.Town?.County?.Country?.Name} ")
                     );
                 }
             }
